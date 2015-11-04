@@ -1,0 +1,97 @@
+{
+  "type": "script",
+  "seleniumVersion": "2",
+  "formatVersion": 2,
+  "steps": [
+    {
+      "type": "get",
+      "url": "http://localhost:8080/SpringSecurityRegistration1/"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "link text",
+        "value": "Регистрация."
+      }
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "username"
+      },
+      "text": "Sasha"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "password"
+      },
+      "text": "123456"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "password"
+      },
+      "text": ""
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "button[type=\"submit\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "size must be between 6 and 45"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "password"
+      },
+      "text": "123456"
+    },
+    {
+      "type": "doubleClickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "button[type=\"submit\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "Passwords dont match"
+    },
+    {
+      "type": "setElementText",
+      "locator": {
+        "type": "id",
+        "value": "matchingPassword"
+      },
+      "text": "123456"
+    },
+    {
+      "type": "clickElement",
+      "locator": {
+        "type": "css selector",
+        "value": "button[type=\"submit\"]"
+      }
+    },
+    {
+      "type": "verifyTextPresent",
+      "text": "There is already user with such username in system"
+    }
+  ],
+  "data": {
+    "configs": {},
+    "source": "none"
+  },
+  "inputs": [],
+  "timeoutSeconds": 60
+}

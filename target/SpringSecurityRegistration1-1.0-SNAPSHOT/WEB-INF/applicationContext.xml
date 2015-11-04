@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/jdbc.properties</value>
+                <value>classpath:encoding.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <context:property-placeholder location="classpath:encoding.properties" />
+    
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	<property name="basenames">
+	    <value>messages</value>
+	</property>
+    </bean>
+
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+        p:driverClassName="${jdbc.driverClassName}"
+        p:url="${jdbc.url}"
+        p:username="${jdbc.username}"
+        p:password="${jdbc.password}" />
+
+    <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+    <bean id="userRepository" class="com.sf.springsecurityregistration1.core.repository.UserRepositoryJPA"
+        p:driverClassName="${jdbc.driverClassName}"
+        p:dbURL="${jdbc.url}"
+        p:dbUsername="${jdbc.username}"
+        p:dbPassword="${jdbc.password}" />
+    <bean id="announcementRepository" class="com.sf.springsecurityregistration1.core.repository.AnnouncementRepositoryJDBC"
+        p:driverClassName="${jdbc.driverClassName}"
+        p:dbURL="${jdbc.url}"
+        p:dbUsername="${jdbc.username}"
+        p:dbPassword="${jdbc.password}" />
+    
+    <!--<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
+        <!--this is default location <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml"/>-->
+        <!--property name="persistenceUnitName" value="com.sf_SpringSecurityRegistration1_war_1.0-SNAPSHOTPU" /-->
+<!--        <property name="packagesToScan" value="com.sf.springsecurityregistration1.core.entities"/>
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaDialect" ref="jpaDialect" />
+    </bean>-->
+ 
+<!--    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"  p:showSql="true">
+        <property name="database" value="MYSQL" />
+        <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+    </bean>
+ 
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+ 
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+ 
+    <tx:annotation-driven transaction-manager="transactionManager" />-->
+ 
+</beans>
