@@ -53,17 +53,17 @@ public class PersistTestDataInDB {
             while ((sCurrentLine = br.readLine()) != null) {
                 if (sCurrentLine.contains(JDBC_URL_MARKER)) {
                     jdbcUrl = sCurrentLine.split(JDBC_URL_MARKER)[1];
-                    System.out.println(jdbcUrl);
+//                    System.out.println(jdbcUrl);
                 }
                 if (sCurrentLine.contains(JDBC_USERNAME_MARKER)) {
                     jdbcUsername = sCurrentLine.split(JDBC_USERNAME_MARKER)[1];
-                    System.out.println(jdbcUsername);
+//                    System.out.println(jdbcUsername);
                 }
                 if (sCurrentLine.contains(JDBC_PASSWORD_MARKER)) {
                     jdbcPassword = sCurrentLine.split(JDBC_PASSWORD_MARKER)
                             .length > 0 
                             ? sCurrentLine.split(JDBC_PASSWORD_MARKER)[1] : "";
-                    System.out.println(jdbcPassword);
+//                    System.out.println(jdbcPassword);
                 }
             }
 
@@ -284,7 +284,9 @@ public class PersistTestDataInDB {
             PreparedStatement insertUser
                     = connection.prepareStatement(INSERT_ROLE_STATEMENT);
             insertUser.setString(1, "Pasha");
+            System.out.println("insertUser.setString(1, \"Pasha\")");
             insertUser.setString(2, "ROLE_USER");
+            insertUser.execute();
             connection.commit();
         } catch (SQLException ex) {
                 Logger.getLogger(PersistTestDataInDB.class.getName())

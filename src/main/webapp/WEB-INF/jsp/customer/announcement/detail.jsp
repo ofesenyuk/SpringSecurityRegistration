@@ -83,6 +83,7 @@
                             <td><a href="<c:url value='/customer/announcement/search/delete' />"><spring:message code="announcement.delete" /></a></td>
                     
                 </c:if>
+                <a href="<c:url value='/welcome' />"><spring:message code="welcome.page" /></a>
             </form:form>
     </body>
 </html>

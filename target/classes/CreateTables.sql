@@ -38,13 +38,13 @@ VALUES ('mkyong', 'ROLE_ADMIN');
 INSERT INTO user_roles (username, role)
 VALUES ('alex', 'ROLE_USER');
 
-INSERT INTO announcements (username, publication_date, header, title, content)
-    VALUES ('Паша', now(), 'продажа', 'Ауди совсем новая', 'Продам совсем новую Ауди 2015 года выпуска');
-INSERT INTO announcements (username, publication_date, header, title, content)
-    VALUES ('Маша', now(), 'покупка', 'Куплю куртку новую', 'Куплю куртку новую для себя размер 48');
-INSERT INTO announcements (username, publication_date, header, title, content)
-    VALUES ('Глаша', now(), 'аренда', 'Аренда дома для семьи', 'Сниму дом за городом для семьи из 8 человек');
-INSERT INTO announcements (username, publication_date, header, title, content)
-    VALUES ('mkyong', now(), 'услуги', 'Помогу с трудоустройством в ИТ', 'Готовлю для собеседования в фирму "ИТ технологии"');
-INSERT INTO announcements (username, publication_date, header, title, content)
-    VALUES ('Глаша', now(), 'знакомства', 'Ищу огородников-проффесионалов', 'Занимаюсь разведение сельдерея. Ищу огородников, занимающихся тем же.');   
+--INSERT INTO announcements (username, publication_date, header, title, content)
+--    VALUES ('Паша', now(), 'продажа', 'Ауди совсем новая', 'Продам совсем новую Ауди 2015 года выпуска');
+--INSERT INTO announcements (username, publication_date, header, title, content)
+--    VALUES ('Маша', now(), 'покупка', 'Куплю куртку новую', 'Куплю куртку новую для себя размер 48');
+--INSERT INTO announcements (username, publication_date, header, title, content)
+--    VALUES ('Глаша', now(), 'аренда', 'Аренда дома для семьи', 'Сниму дом за городом для семьи из 8 человек');
+--INSERT INTO announcements (username, publication_date, header, title, content)
+--    VALUES ('mkyong', now(), 'услуги', 'Помогу с трудоустройством в ИТ', 'Готовлю для собеседования в фирму "ИТ технологии"');
+--INSERT INTO announcements (username, publication_date, header, title, content)
+--    VALUES ('Глаша', now(), 'знакомства', 'Ищу огородников-проффесионалов', 'Занимаюсь разведение сельдерея. Ищу огородников, занимающихся тем же.');   

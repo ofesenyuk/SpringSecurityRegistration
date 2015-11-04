@@ -53,6 +53,11 @@ public class RegistrationController {
         this.userService = userService;
     }
 
+    /**
+     * Method used to fill welcome page.
+     *
+     * @return model of view
+     */
     @RequestMapping(value = {"/", "/welcome**", "/logout**", "/index**"}, 
             method = RequestMethod.GET)
     public ModelAndView welcomePage() {
@@ -94,10 +99,15 @@ public class RegistrationController {
 
     }
     
+    /**
+     * Method used to create a new user for registration page.
+     *
+     * @return model of the registration page
+     */
     @RequestMapping(value = {"/registration"}, 
             method = RequestMethod.GET)
     public ModelAndView registrationPage() {
-        System.out.println("registrationPage");
+//        System.out.println("registrationPage");
         Users user = new Users();
         ModelAndView model = new ModelAndView();
         model.addObject("user", user);
@@ -105,6 +115,16 @@ public class RegistrationController {
         return model;
 
     }
+    
+    /**
+     * Method used to check and persist a new user data.
+     *
+     * @param accountDto user to be persisted
+     * @param result used to detect errors in form
+     * @param request for future code
+     * @param errors for future code
+     * @return model of the success view or that of the registration page
+     */
     @RequestMapping(value = "/user/**/registration", method = RequestMethod.POST)
     public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid 
             Users accountDto, BindingResult result, WebRequest request, 
@@ -123,18 +143,23 @@ public class RegistrationController {
         }
         if (result.hasErrors()) {
             System.out.println("result.hasErrors()");
-//            return new ModelAndView("registration", "user", accountDto);
             ModelAndView model = new ModelAndView("registration");
             model.addObject("user", accountDto);
             return model;
         } else {
-//            return new ModelAndView("successRegister", "user", accountDto);
             ModelAndView model = new ModelAndView("successRegister");
             model.addObject("user", accountDto);
             return model;
         }
     }
 
+    /**
+     * Method used to create a new user .
+     *
+     * @param accountDto user to be persisted
+     * @param result for future code
+     * @return null for error and created user for success
+     */
     private Users createUserAccount(Users accountDto, BindingResult result) {
         Users registered = null;
         try {
@@ -148,6 +173,11 @@ public class RegistrationController {
         return registered;
     }
 
+    /**
+     * Method will be used to secure administrative actions.
+     * 
+     * @return model of the administrator page
+     */
     @RequestMapping(value = "/admin**", method = RequestMethod.GET)
     public ModelAndView adminPage() {
 
@@ -163,6 +193,11 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Method will be used to secure administrative actions.
+     *
+     * @return model of the administrator page
+     */
     @RequestMapping(value = "/dba**", method = RequestMethod.GET)
     public ModelAndView dbaPage() {
 
@@ -175,8 +210,17 @@ public class RegistrationController {
 
     }
     
-    @RequestMapping(value = {"/login", "/user/**/login"}, method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
+        /**
+     * Method is used to support login page.
+     *
+     * @param error
+     * @param logout
+     * @return model of the login page
+     */
+    @RequestMapping(value = {"/login", "/user/**/login"}, 
+            method = RequestMethod.GET)
+    public ModelAndView login(@RequestParam(value = "error", 
+            required = false) String error,
             @RequestParam(value = "logout", required = false) String logout) {
 
         System.out.println("login: logout = " + logout);
@@ -213,19 +257,4 @@ public class RegistrationController {
         return model;
 
     }
-
-    private String changeEncoding(String text, String inEncoding,
-            String outEncoding) {
-
-        try {
-            byte[] textBytes = text.getBytes(inEncoding);
-            return new String(textBytes, outEncoding);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AnnouncementDetailsController.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            return text;
-        }
-    }
-
-
 }

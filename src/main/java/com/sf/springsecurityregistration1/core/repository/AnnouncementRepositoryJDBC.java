@@ -8,7 +8,6 @@ package com.sf.springsecurityregistration1.core.repository;
 import com.sf.springsecurityregistration1.core.entities.AnnouncementSearchCriteria;
 import com.sf.springsecurityregistration1.core.entities.Announcements;
 import com.sf.springsecurityregistration1.core.entities.Category;
-import com.sf.springsecurityregistration1.core.services.UserService;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,47 +40,7 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
     private String dbURL;
     private String dbUsername;
     private String dbPassword;
-
-    @Override
-    public Collection<Category> findAllCategories() {
-        Set<Category> foundCategories = new HashSet<>();
-        try {
-            System.out.println("findAllCategories ");
-            Announcements a = new Announcements();
-            String table = a.getClass()
-                .getAnnotation(javax.persistence.Table.class).name();
-            final String FIND_CATEGORIES = "SELECT * FROM " + table;
-            System.out.println(FIND_CATEGORIES);
-            Connection connection = null;
-            try {
-                Properties connectionProps = new Properties();
-                connectionProps.put("user", dbUsername);
-                connectionProps.put("password", dbPassword);
-                connection = DriverManager.getConnection(dbURL,
-                        connectionProps);
-                Statement findCategoriesStmnt = connection.createStatement();
-                ResultSet rs = findCategoriesStmnt
-                        .executeQuery(FIND_CATEGORIES);
-                while (rs.next()) {
-                    Category category = new Category(rs.getString(CATEGORY));
-                    System.out.println(category.getValue() + " " 
-                            + category.getHtmlValue());
-                    foundCategories.add(category);
-//                    foundAuthors.add(UserService
-//                            .buildHtmlEntityCode(rs.getString(AUTHOR)));
-                    
-                }
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("findAllCategories: " + e.getMessage());
-        }
-        return foundCategories;
-    }
-
+    
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;
     }
@@ -98,6 +56,45 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
     public void setDbPassword(String dbPassword) {
         this.dbPassword = dbPassword;
     }
+
+
+    @Override
+    public Collection<Category> findAllCategories() {
+        Set<Category> foundCategories = new HashSet<>();
+        try {
+//            System.out.println("findAllCategories ");
+            Announcements a = new Announcements();
+//            for correct table name
+            String table = a.getClass()
+                .getAnnotation(javax.persistence.Table.class).name();
+            final String FIND_CATEGORIES = "SELECT * FROM " + table;
+//            System.out.println(FIND_CATEGORIES);
+            Connection connection = null;
+            try {
+                Properties connectionProps = new Properties();
+                connectionProps.put("user", dbUsername);
+                connectionProps.put("password", dbPassword);
+                connection = DriverManager.getConnection(dbURL,
+                        connectionProps);
+                Statement findCategoriesStmnt = connection.createStatement();
+                ResultSet rs = findCategoriesStmnt
+                        .executeQuery(FIND_CATEGORIES);
+                while (rs.next()) {
+                    Category category = new Category(rs.getString(CATEGORY));
+                    System.out.println(category.getValue() + " " 
+                            + category.getHtmlValue());
+                    foundCategories.add(category);                    
+                }
+            } finally {
+                if (connection != null) {
+                    connection.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("findAllCategories: " + e.getMessage());
+        }
+        return foundCategories;
+    }
     
     @Override
     public Collection<Announcements> 
@@ -106,8 +103,8 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
         try {
             System.out.println("findAnnouncements ");
             Announcements announcement = new Announcements();
-            Map<String,String> columns = returnTableFields(announcement); //new HashMap<>();
-//            System.out.println("announcement " + Arrays.toString(announcement.getClass().getDeclaredField("id").getAnnotations()));
+//            for correct table name and fields names
+            Map<String,String> columns = returnTableFields(announcement); 
             String table = announcement.getClass()
                     .getAnnotation(javax.persistence.Table.class).name();
             final String FIND_ANNOUNCEMENTS = "SELECT * FROM " + table;
@@ -122,18 +119,18 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
                 ResultSet rs = foundAnnouncementsStmnt
                         .executeQuery(FIND_ANNOUNCEMENTS);
                 while (rs.next()) {
-//                    Timestamp timestamp = rs.getTimestamp(columns.get("publicationDate"));
-//                    System.out.println("timestamp " + timestamp);
                     announcement 
                             = new Announcements(rs.getInt(columns.get("id")), 
                                     rs.getString(columns.get("username")), 
-                                    rs.getTimestamp(columns.get("publicationDate")), 
+                                    rs.getTimestamp(columns
+                                            .get("publicationDate")), 
                                     rs.getString(columns.get("header")), 
                                     rs.getString(columns.get("title")), 
                                     rs.getString(columns.get("content")));
                     String authorToSelect = criteria.getAuthor();
-                    System.out.println("authorToSelect " + authorToSelect 
-                        + " cmp " + announcement.getUsername());
+//                    System.out.println("authorToSelect " + authorToSelect 
+//                        + " cmp " + announcement.getUsername());
+//                    skip selected author and selected header
                     if (authorToSelect != null 
                             && !authorToSelect.equals(criteria.ALL_AUTHORS)
                             && !announcement.getUsername()
@@ -168,7 +165,7 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
     public Collection<String> findAllAuthors() {
         Set<String> foundAuthors = new HashSet<>();
         try {
-            System.out.println("findAllAuthors ");
+//            System.out.println("findAllAuthors ");
             Announcements a = new Announcements();
             String table = a.getClass()
                     .getAnnotation(javax.persistence.Table.class).name();
@@ -203,13 +200,13 @@ public class AnnouncementRepositoryJDBC implements AnnouncementRepository {
     public Announcements findAnnouncement(long announcementId) {
         Announcements foundAnnouncement = new Announcements();
         try {
-            System.out.println("findAnnouncement ");
+//            System.out.println("findAnnouncement ");
             Map<String, String> columns = returnTableFields(foundAnnouncement);
             String table = foundAnnouncement.getClass()
                     .getAnnotation(javax.persistence.Table.class).name();
             final String FIND_ANNOUNCEMENT = "SELECT * FROM " + table 
                     + " WHERE id = " + announcementId;
-            System.out.println(FIND_ANNOUNCEMENT);
+//            System.out.println(FIND_ANNOUNCEMENT);
             Connection connection = null;
             try {
                 Properties connectionProps = new Properties();

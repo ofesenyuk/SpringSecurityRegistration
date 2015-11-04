@@ -38,6 +38,9 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  *
  * @author sf
+ 
+ Work with announcements details: prepareCreation, read, update, and delete given 
+ announcement
  */
 @Controller
 @SessionAttributes(types = {Announcements.class })
@@ -48,15 +51,10 @@ public class AnnouncementDetailsController {
     private String dbEncoding = "UTF8";    
     @Autowired
     private IAnnouncementService announcementService;
-    
-//    @ModelAttribute("headers")
-//    public Collection<Category> getCategories() {
-//        return this.announcementService.findAllCategories();
-//    }
 
     /**
-     * Method used to prepare our model and select the view to show / edit the details
-     * of the selected announcement.
+     * Method used to prepare our model and select the view to show / edit 
+     * the details of the selected announcement.
      *
      * @param announcementId the id of the announcement
      * @param model the implicit model
@@ -68,11 +66,7 @@ public class AnnouncementDetailsController {
             Model model) {
         Announcements announcement = this.announcementService
                 .findAnnouncement(announcementId);
-        System.out.println("details " + announcement.getPublicationDate());
-//        
-//        ModelAndView modelAndView = new ModelAndView("customer/announcement/detail");
-//        model.addAttribute(announcement);
-//        modelAndView.addObject(announcement);
+//        System.out.println("details " + announcement.getPublicationDate());
         Set<Category> headers = new LinkedHashSet<>();
         Category currentCategory = new Category(announcement.getHeader());
         headers.add(currentCategory);
@@ -83,22 +77,17 @@ public class AnnouncementDetailsController {
     }
     
     /**
-     * Method used to prepare our model and select the view to show / edit the details
-     * of the selected announcement.
+     * Method used to update the details of the selected announcement.
      *
-     * @param announcementId the id of the announcement
-     * @param model the implicit model
-     * @return view name to render (customer/announcement/detail)
+     * @param status to remove announcement from session
+     * @param announcement chosen announcement
+     * @param errors not used already
+     * @return next view address
      */
-    @RequestMapping(value = "/customer/announcement/detail/*",  method=RequestMethod.POST)
-//    @RequestMapping(value = "/customer/announcement/detail/edit",  method=RequestMethod.POST)
-//    public ModelAndView editDetails(HttpServletRequest request, HttpSession session) {
-//    @RequestMapping(value = "/customer/announcement/detail/**", method = RequestMethod.POST, params = "announcements")
-    public String editDetails(SessionStatus status, @Validated 
-    @ModelAttribute Announcements announcement, BindingResult errors) {
-//    public ModelAndView editDetails(@ModelAttribute("announcement") //@Valid 
-//            Announcements announcement, BindingResult result, WebRequest request,
-//            Errors errors) {
+    @RequestMapping(value = "/customer/announcement/detail/*",  
+            method=RequestMethod.POST)
+    public String editDetails(SessionStatus status, @Valid 
+        @ModelAttribute Announcements announcement, BindingResult errors) {
         String newTitle = changeEncoding(announcement.getTitle(), 
                 pageEncoding, dbEncoding);
         announcement.setTitle(newTitle);
@@ -111,41 +100,18 @@ public class AnnouncementDetailsController {
         announcement.setContent(newContent);
         this.announcementService.update(announcement);
         status.setComplete();
-//        if (request == null) {
-//            System.out.println("request == null");
-//        }
-//        System.out.println("editDetails " + Arrays.toString(request.getParameterValues("announcements")));
-//        System.out.println("editDetails " + session.getAttribute("announcements"));
-//        System.out.println("editDetails " + request.getParameter("content"));
-//        for (Object object : request.getParameterMap().keySet()) {
-//            System.out.println("object " + object);
-//        }
-//        
-//        ModelAndView modelAndView = new ModelAndView("customer/announcement/search");
-//        model.addAttribute(announcement);
-//        modelAndView.addObject(new AnnouncementSearchCriteria());
-//        Set<Category> headers = new LinkedHashSet<>();
-//        Category currentCategory = new Category(announcement.getHeader());
-//        headers.add(currentCategory);
-//        headers.addAll(this.announcementService.findAllCategories());
-//        model.addAttribute("announcement", announcement);
-//        model.addAttribute("headers", headers);
-//        return modelAndView;
         return "redirect:/customer/announcement/search";
     }
     
         /**
      * This method creates a new announcement.
      *
-     * @param criteria the criteria used for searching
-     * @return the found announcements
+     * @return the model with default announcement
      *
-     * @see
-     * com.apress.prospringmvc.bookstore.repository.BookRepository#findBooks(BookSearchCriteria)
      */
     @RequestMapping(value = "/customer/announcement/create",
             method = {RequestMethod.GET})
-    public ModelAndView create() {
+    public ModelAndView prepareCreation() {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         String name = auth.getName(); //get logged in username
@@ -162,21 +128,20 @@ public class AnnouncementDetailsController {
     }
     
     /**
-     * Method used to prepare our model and select the view to show / edit the
-     * details of the selected announcement.
+     * Method used to verify and persist the new announcement.
      *
-     * @param announcementId the id of the announcement
-     * @param model the implicit model
-     * @return view name to render (customer/announcement/detail)
+     * @param status used to remove announcement from the session
+     * @param announcement edited
+     * @param result used to search for errors in form
+     * @param request for future code
+     * @param errors for future code
+     * @return model of next view (search for success, edit for errors)
      */
     @RequestMapping(value = "/customer/announcement/create",
             method = {RequestMethod.POST})
     public ModelAndView create(SessionStatus status, @Valid
             @ModelAttribute Announcements announcement, BindingResult result, 
             WebRequest request, Errors errors) {
-//    public ModelAndView editDetails(@ModelAttribute("announcement") //@Valid 
-//            Announcements announcement, BindingResult result, WebRequest request,
-//            Errors errors) {
         String title = changeEncoding(announcement.getTitle(),
                 pageEncoding, dbEncoding);
         announcement.setTitle(title);
@@ -216,17 +181,9 @@ public class AnnouncementDetailsController {
             ModelAndView model 
                     = new ModelAndView("/customer/announcement/create");
             model.addObject("announcements", announcement);
-//            AnnouncementErrorMessages announcementErrorMessages 
-//                    = new AnnouncementErrorMessages(result
-//                            .getFieldError("title").toString(), 
-//                            "", 
-//                            result.getFieldError("content").toString());
-//            model.addObject("announcementErrorMessages", 
-//                    announcementErrorMessages);
             return model;
 //            return "redirect:/customer/announcement/create";
         } else {
-//            return new ModelAndView("successRegister", "user", accountDto);
             if (announcement.getHeader().equals("new")) {
                 int size = announcement.getNewHeader().length();
                 if (size > 25 || 0 == size) {
@@ -238,6 +195,7 @@ public class AnnouncementDetailsController {
                 }
                 announcement.setHeader(changeEncoding(announcement
                             .getNewHeader(), pageEncoding, dbEncoding));
+                createAnnouncement(announcement, result);
             }
             ModelAndView model 
                     = new ModelAndView("/customer/announcement/search");
@@ -256,34 +214,26 @@ public class AnnouncementDetailsController {
         }
     }
     
+    /**
+     * Method used to delete the announcement.
+     *
+     * @param status used to remove announcement from the session
+     * @param announcement to be deleted
+     * @param errors for future code
+     * @return model of next view (search for success)
+     */
     @RequestMapping(value = "/customer/announcement/search/delete")
     public String delete(SessionStatus status, @Validated
             @ModelAttribute Announcements announcement, BindingResult errors) {
         this.announcementService.delete(announcement);
         status.setComplete();
-//        if (request == null) {
-//            System.out.println("request == null");
-//        }
-//        System.out.println("editDetails " + Arrays.toString(request.getParameterValues("announcements")));
-//        System.out.println("editDetails " + session.getAttribute("announcements"));
-//        System.out.println("editDetails " + request.getParameter("content"));
-//        for (Object object : request.getParameterMap().keySet()) {
-//            System.out.println("object " + object);
-//        }
-//        
-//        ModelAndView modelAndView = new ModelAndView("customer/announcement/search");
-//        model.addAttribute(announcement);
-//        modelAndView.addObject(new AnnouncementSearchCriteria());
-//        Set<Category> headers = new LinkedHashSet<>();
-//        Category currentCategory = new Category(announcement.getHeader());
-//        headers.add(currentCategory);
-//        headers.addAll(this.announcementService.findAllCategories());
-//        model.addAttribute("announcement", announcement);
-//        model.addAttribute("headers", headers);
-//        return modelAndView;
         return "redirect:/customer/announcement/search";
     }
 
+    /**
+     * Method used to change encoding (especially for cyrillic letters).
+     *
+     */
     private String changeEncoding(String text, String inEncoding, 
             String outEncoding) {
         
@@ -297,7 +247,8 @@ public class AnnouncementDetailsController {
         }
     }
 
-    private Announcements createAnnouncement(Announcements announcement, BindingResult result) {
+    private Announcements createAnnouncement(Announcements announcement, 
+            BindingResult result) {
         return this.announcementService.save(announcement);
     }
 }

@@ -59,3 +59,5 @@
 <a href="<c:url value="create" />">
         <spring:message code="announcement.create"></spring:message>
 </a>
+
+<a href="<c:url value='/welcome' />"><spring:message code="welcome.page" /></a>

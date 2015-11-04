@@ -7,21 +7,15 @@ package com.sf.springsecurityregistration1.core.repository;
 
 import com.sf.springsecurityregistration1.core.entities.UserRoles;
 import com.sf.springsecurityregistration1.core.entities.Users;
-import java.lang.annotation.Annotation;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Properties;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -44,7 +38,8 @@ public class UserRepositoryJPA implements UserRepository {
 //        UserTransaction userTransaction = 
 //        usersJpaController = new UsersJpaController(null, factory);
 //    }
-    @PersistenceContext  //(unitName = "com.sf_SpringSecurityRegistration1_war_1.0-SNAPSHOTPU")
+    @PersistenceContext  
+//(unitName = "com.sf_SpringSecurityRegistration1_war_1.0-SNAPSHOTPU")
     private EntityManager usersEntityManager; 
 //            = factory.createEntityManager();
 
@@ -52,16 +47,16 @@ public class UserRepositoryJPA implements UserRepository {
 //    @Transactional
     public Users save(Users accountDto) {
         try {
-            System.out.println("usersEntityManager.persist " 
-                    + accountDto.getUsername() + " " 
-                    + accountDto.getPassword());
+//            System.out.println("usersEntityManager.persist " 
+//                    + accountDto.getUsername() + " " 
+//                    + accountDto.getPassword());
 //            usersEntityManager.getTransaction().begin();
 //            usersEntityManager.persist(accountDto);
             persistWithJDBC(accountDto);
 //            usersEntityManager.flush();
 //            usersEntityManager.getTransaction().commit();
-            System.out.println("UserRepositoryJPA: " + accountDto.getUsername()
-                + " is persisted");
+//            System.out.println("UserRepositoryJPA: " + accountDto.getUsername()
+//                + " is persisted");
         } catch (Exception e) {
             System.out.println("UserRepositoryJPA: " 
                     + e.getMessage());
@@ -129,11 +124,9 @@ public class UserRepositoryJPA implements UserRepository {
 
     private <T> void persistWithJDBC(T dto) 
             throws SQLException {
-//        Annotation[] annotations = dto.getClass().getAnnotations();
-//        System.out.println("annotations " + Arrays.toString(annotations));
         String table = dto.getClass()
                 .getAnnotation(javax.persistence.Table.class).name();
-        System.out.println("table " + table);
+//        System.out.println("table " + table);
         final String ROLE = "role";
         boolean isRole = table.toLowerCase().contains(ROLE);
         final String INSERT_USER = "INSERT INTO " + table 

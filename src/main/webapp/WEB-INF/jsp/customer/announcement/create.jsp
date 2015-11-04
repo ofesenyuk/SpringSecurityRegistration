@@ -68,6 +68,7 @@
             </table>
         </fieldset>
         <input type="submit" value=<spring:message code="announcement.submit" /> />
+        <a href="<c:url value='/welcome' />"><spring:message code="welcome.page" /></a>
     </form:form>
 </body>
 </html>
