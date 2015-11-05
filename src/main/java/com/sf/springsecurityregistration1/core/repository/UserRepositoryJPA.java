@@ -74,7 +74,7 @@ public class UserRepositoryJPA implements UserRepository {
 //                    .setParameter("username", userName).getSingleResult();
 //            System.out.println("usersEntityManager " 
 //                    + usersEntityManager.toString() + " " + user.getPassword());
-            final String FIND_USER = "SELECT * FROM USERS WHERE username = '"
+            final String FIND_USER = "SELECT * FROM users WHERE username = '"
                     + userName + "'";
             Connection connection = null;
             String foundUserName = "";
